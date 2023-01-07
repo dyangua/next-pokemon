@@ -8,9 +8,9 @@ type PokemonCardProps = {
 
 const PokemonCard = ({ pokemon }: PokemonCardProps) => {
   return (
-    <Grid xs={6} md={4}>
+    <Grid xs={12} md={6} lg={4} justify="center">
       <NextLink href={`/pokemon/${pokemon.id}`} passHref>
-        <Card isPressable css={{ margin: 8, minWidth: 200 }}>
+        <Card isPressable css={{ margin: 8, minWidth: 300 }}>
           <Card.Body css={{ p: 0 }}>
             <Card.Image
               src={pokemon.image}
