@@ -1,4 +1,4 @@
-import { Text } from "@nextui-org/react";
+import { Row, Text } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { PokemonGrid } from ".";
 import PokemonsGrid from "../components/app/PokemonsGrid";
@@ -6,7 +6,11 @@ import Layout from "../components/layouts/Layout";
 import { getPokemons } from "../utils/pokemonOperationLocalStorage";
 
 const EmptyPokemons = () => {
-  return <Text>Not pokemons in the box</Text>;
+  return (
+    <Row justify="center" css={{ marginTop: 36 }}>
+      <Text h2>Not pokemons</Text>
+    </Row>
+  );
 };
 
 const FavoritesPage = () => {
