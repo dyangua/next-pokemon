@@ -15,6 +15,12 @@ const Layout: FC<LayoutProps> = ({ children, pageTitle }) => {
         <meta name="author" content="Daniel" />
         <meta name="description" content="Information about [pokemon]" />
         <meta name="keywords" content="[pokemon name]" />
+        <meta property="og:title" content={`Pokemon ${pageTitle} `} />
+        <meta property="og:description" content="Pokemo web site" />
+        <meta
+          property="og:image"
+          content="https://cdn.custom-cursor.com/collections/129/cover-pokemon-preview.png"
+        />
       </Head>
 
       <NavbarUI />
