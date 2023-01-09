@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import pokeAPI from "../../api/pokeApi";
 import PokemonImage from "../../components/app/PokemonImage";
 import Layout from "../../components/layouts/Layout";
+import { getPokemonAPI } from "../../utils/getPokemonInfoAPI";
 import { sanitizeImagesFromSprites } from "../../utils/pokemonImages";
 import {
   togglePokemon,
@@ -32,8 +33,7 @@ type PokemonDetailPagePros = {
   pokemon: Pokemon;
 };
 
-const PokemonDetailPage = ({ pokemon }: PokemonDetailPagePros) => {
-  const { name, sprites, id } = pokemon;
+const PokemonDetailPage = ({ name, sprites, id }: Pokemon) => {
   const [isFavorite, setIsFavorite] = useState(verifyPokemonIsFavorite(id));
 
   const pokemonImages = useMemo(
@@ -42,7 +42,7 @@ const PokemonDetailPage = ({ pokemon }: PokemonDetailPagePros) => {
   );
 
   const onTogglePokemon = () => {
-    togglePokemon(pokemon);
+    togglePokemon({ name, sprites, id });
     setIsFavorite(!isFavorite);
   };
 
@@ -50,7 +50,7 @@ const PokemonDetailPage = ({ pokemon }: PokemonDetailPagePros) => {
     <Layout pageTitle={name}>
       <Container css={{ marginTop: 24 }}>
         <Row wrap="wrap" justify="space-between" align="center">
-          <Text b>{pokemon.name}</Text>
+          <Text b>{name}</Text>
           <Button
             onPress={onTogglePokemon}
             color={isFavorite ? "secondary" : "primary"}
@@ -77,17 +77,28 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   return {
     paths: pokemonIds,
-    fallback: false, // can also be true or 'blocking'
+    // fallback: false, // can also be true or 'blocking'
+    fallback: "blocking",
   };
 };
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
-  const params = ctx.params;
-  const { data } = await pokeAPI.get(`/pokemon/${params?.id}`);
+  const { id } = ctx.params as { id: string };
+  const pokemon = await getPokemonAPI(id);
+
+  if (!pokemon) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
   return {
     props: {
-      pokemon: data,
+      ...pokemon,
     },
+    revalidate: 86400, // 60 * 60 * 24,
   };
 };
 
